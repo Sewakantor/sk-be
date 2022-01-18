@@ -1,22 +1,14 @@
-# builder
-FROM golang:1.16-alpine AS builder
-
+# Builder
+FROM golang:1.17-alpine AS builder
+RUN mkdir /app
+ADD . /app
 WORKDIR /app
-COPY . .
 RUN go mod tidy
-RUN go build -o mainrun app/main.go
+RUN go build -o main
 
-# runner
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-RUN apk update && apk upgrade && \
-    apk --update --no-cache add tzdata && \
-    mkdir /app
-
+# Runner
+FROM alpine:3.14
 WORKDIR /app
-
-STOPSIGNAL SIGINT
+COPY --from=builder /app/main .
 EXPOSE 8080
-COPY --from=builder /app/mainrun /app
-COPY --from=builder /app/.env /app
-CMD /app/mainrun
+CMD ["./main"]
