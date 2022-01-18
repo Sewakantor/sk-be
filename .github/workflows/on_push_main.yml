@@ -68,3 +68,4 @@ jobs:
             rm mainrun || true
             go build -o mainrun app/main.go
             nohup ./mainrun & disown
+            exit 1
