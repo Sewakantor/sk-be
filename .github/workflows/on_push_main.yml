@@ -102,36 +102,24 @@ jobs:
           CONFIG_SENDER_NAME: ${{ secrets.CONFIG_SENDER_NAME }}
           CONFIG_SMTP_PORT: ${{ secrets.CONFIG_SMTP_PORT }}
           CONFIG_SMTP_HOST: ${{ secrets.CONFIG_SMTP_HOST }}
-        run: |
-          ssh development 'export PORT='"'$PORT'"' && \
-          export BASE_URL_TARGET='"'$BASE_URL_TARGET'"' && \
-          export DB_NAME='"'$DB_NAME'"' && \
-          export DB_USER='"'$DB_USER'"' && \
-          export DB_PASS='"'$DB_PASS'"' && \
-          export DB_HOST='"'$DB_HOST'"' && \
-          export DB_PORT='"'$DB_PORT'"' && \
-          export SECRET_TOKEN_KEY='"'$SECRET_TOKEN_KEY'"' && \
-          export JWT_TOKEN_AGE='"'$JWT_TOKEN_AGE'"' && \
-          export CONFIG_AUTH_PASSWORD='"'$CONFIG_AUTH_PASSWORD'"' && \
-          export CONFIG_AUTH_EMAIL='"'$CONFIG_AUTH_EMAIL'"' && \
-          export CONFIG_SENDER_NAME='"'$CONFIG_SENDER_NAME'"' && \
-          export CONFIG_SMTP_PORT='"'$CONFIG_SMTP_PORT'"' && \
-          export CONFIG_SMTP_HOST='"'$CONFIG_SMTP_HOST'"' && \
-          docker rm -vf $(docker ps -a -q) || true && \
-          docker pull avtara/sewakantorbackend:1.0.0 && \
-          docker run -d -p 8080:8080 --name sewakantorbackend \
-          -e PORT=$PORT \
-          -e BASE_URL_TARGET=$BASE_URL_TARGET \
-          -e DB_PORT=$DB_PORT \
-          -e DB_USER=$DB_USER \
-          -e DB_PASS=$DB_PASS \
-          -e DB_NAME=$DB_NAME \
-          -e DB_HOST=$DB_HOST \
-          -e SECRET_TOKEN_KEY=$SECRET_TOKEN_KEY \
-          -e JWT_TOKEN_AGE=$JWT_TOKEN_AGE \
-          -e CONFIG_AUTH_PASSWORD=$CONFIG_AUTH_PASSWORD \
-          -e CONFIG_AUTH_EMAIL=$CONFIG_AUTH_EMAIL \
-          -e CONFIG_SENDER_NAME=$CONFIG_SENDER_NAME \
-          -e CONFIG_SMTP_PORT=$CONFIG_SMTP_PORT \
-          -e CONFIG_SMTP_HOST=$CONFIG_SMTP_HOST \
-          avtara/sewakantorbackend:1.0.0'
+          run: |
+            ssh development 'export PORT='"'$PORT'"' && \
+            export DB_USER='"'$DB_USER'"' && \
+            export DB_PASSWORD='"'$DB_PASSWORD'"' && \
+            export DB_HOST='"'$DB_HOST'"' && \
+            export DB_PORT='"'$DB_PORT'"' && \
+            export DB_NAME='"'$DB_NAME'"' && \
+            export JWT_SECRET='"'$JWT_SECRET'"' && \
+            export JWT_EXPIRE='"'$JWT_EXPIRE'"' && \
+            docker rm -vf $(docker ps -a -q) || true && \
+            docker pull avtara/sewakantorbackend:1.0.0 && \
+            docker run -d -p 8000:8000 --name sewakantorbackend \
+            -e PORT=$PORT \
+            -e DB_HOST=$DB_HOST \
+            -e DB_PORT=$DB_PORT \
+            -e DB_USER=$DB_USER \
+            -e DB_PASSWORD=$DB_PASSWORD \
+            -e DB_NAME=$DB_NAME \
+            -e JWT_SECRET=$JWT_SECRET \
+            -e JWT_EXPIRE=$JWT_EXPIRE \
+            avtara/sewakantorbackend:1.0.0'
