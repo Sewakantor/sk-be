@@ -103,9 +103,9 @@ jobs:
           CONFIG_SMTP_PORT: ${{ secrets.CONFIG_SMTP_PORT }}
           CONFIG_SMTP_HOST: ${{ secrets.CONFIG_SMTP_HOST }}
         run: |
-          pkill -f "mainrun"
+          pkill -f "mainrun" || true
           cd sk-be
           git pull
-          rm mainrun
+          rm mainrun || true
           build -o mainrun app/main.go
           ./mainrun &
