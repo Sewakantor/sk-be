@@ -104,7 +104,7 @@ jobs:
           CONFIG_SMTP_HOST: ${{ secrets.CONFIG_SMTP_HOST }}
         run: |
           pkill -f "mainrun" || true
-          cd sk-be
+          cd ~/sk-be
           git pull
           rm mainrun || true
           build -o mainrun app/main.go
