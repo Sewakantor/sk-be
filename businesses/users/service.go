@@ -91,6 +91,6 @@ func (us *userService) Login(email, password string) (*Domain, error) {
 	if res.Status != 1 {
 		return nil, businesses.ErrAccountUnactivated
 	}
-	res.Token = us.jwtAuth.GenerateToken(res.ID, res.Role)
+	res.Token = us.jwtAuth.GenerateToken(res.ID, res.Role, res.Name, res.Company)
 	return res, nil
 }
