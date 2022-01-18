@@ -48,20 +48,15 @@ jobs:
           go mod tidy
           go test ./... -cover -failfast
 
-  build-run:
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    needs: Unit-Test
     steps:
-      - name: SSH Remote Commands
-        uses: appleboy/ssh-action@v0.1.4
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-        script: |
-          pkill -f "mainrun" || true
-          cd ~/sk-be
-          git pull
-          rm mainrun || true
-          build -o mainrun app/main.go
-          ./mainrun &
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: whoami
