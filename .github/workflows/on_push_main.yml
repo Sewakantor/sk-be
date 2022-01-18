@@ -48,90 +48,23 @@ jobs:
           go mod tidy
           go test ./... -cover -failfast
 
-  build-push-docker:
-    name: Build docker image then push to docker hub
-    runs-on: ubuntu-latest
+  build:
+    name: Build and Run on EC2
     needs: Unit-Test
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build Docker Image
-        run: docker build -t avtara/sewakantor-be:latest .
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Push image to Docker Hub
-        run: docker push avtara/sewakantor-be:latest
-
-  deployment-ec2-aws:
-    name: Deploy to AWS EC2
     runs-on: ubuntu-latest
-    needs: build-push-docker
     steps:
-      - uses: actions/checkout@v2
-      - name: SSH Config
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/sewakantor-api.pem
-          chmod 400 ~/.ssh/sewakantor-api.pem
-          cat >>~/.ssh/config <<END
-          Host development
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/sewakantor-api.pem
-            StrictHostKeyChecking=no
-          END
-      - name: Connect to EC2 instance & run Docker image from registry
-        env:
-          PORT: ${{ secrets.PORT }}
-          BASE_URL_TARGET: ${{ secrets.BASE_URL_TARGET }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASS: ${{ secrets.DB_PASS }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          SECRET_TOKEN_KEY: ${{ secrets.SECRET_TOKEN_KEY }}
-          JWT_TOKEN_AGE: ${{ secrets.JWT_TOKEN_AGE }}
-          CONFIG_AUTH_PASSWORD: ${{ secrets.CONFIG_AUTH_PASSWORD }}
-          CONFIG_AUTH_EMAIL: ${{ secrets.CONFIG_AUTH_EMAIL }}
-          CONFIG_SENDER_NAME: ${{ secrets.CONFIG_SENDER_NAME }}
-          CONFIG_SMTP_PORT: ${{ secrets.CONFIG_SMTP_PORT }}
-          CONFIG_SMTP_HOST: ${{ secrets.CONFIG_SMTP_HOST }}
-        run: |
-          ssh development 'export PORT='"'$PORT'"' && \
-          export BASE_URL_TARGET='"'$BASE_URL_TARGET'"' && \
-          export DB_NAME='"'$DB_NAME'"' && \
-          export DB_USER='"'$DB_USER'"' && \
-          export DB_PASS='"'$DB_PASS'"' && \
-          export DB_HOST='"'$DB_HOST'"' && \
-          export DB_PORT='"'$DB_PORT'"' && \
-          export SECRET_TOKEN_KEY='"'$SECRET_TOKEN_KEY'"' && \
-          export JWT_TOKEN_AGE='"'$JWT_TOKEN_AGE'"' && \
-          export CONFIG_AUTH_PASSWORD='"'$CONFIG_AUTH_PASSWORD'"' && \
-          export CONFIG_AUTH_EMAIL='"'$CONFIG_AUTH_EMAIL'"' && \
-          export CONFIG_SENDER_NAME='"'$CONFIG_SENDER_NAME'"' && \
-          export CONFIG_SMTP_PORT='"'$CONFIG_SMTP_PORT'"' && \
-          export CONFIG_SMTP_HOST='"'$CONFIG_SMTP_HOST'"' && \
-          docker rm -vf $(docker ps -a -q) || true && \
-          docker pull avtara/sewakantor-be:latest && \
-          docker run -d -p 8080:8080 --name sewakantor-be \
-          -e PORT=$PORT \
-          -e BASE_URL_TARGET=$BASE_URL_TARGET \
-          -e DB_NAME=$DB_NAME \
-          -e DB_USER=$DB_USER \
-          -e DB_PASS=$DB_PASS \
-          -e DB_HOST=$DB_HOST \
-          -e DB_PORT=$DB_PORT \
-          -e SECRET_TOKEN_KEY=$SECRET_TOKEN_KEY \
-          -e JWT_TOKEN_AGE=$JWT_TOKEN_AGE \
-          -e CONFIG_AUTH_PASSWORD=$CONFIG_AUTH_PASSWORD \
-          -e CONFIG_AUTH_EMAIL=$CONFIG_AUTH_EMAIL \
-          -e CONFIG_SENDER_NAME=$CONFIG_SENDER_NAME \
-          -e CONFIG_SMTP_PORT=$CONFIG_SMTP_PORT \
-          -e CONFIG_SMTP_HOST=$CONFIG_SMTP_HOST \
-          avtara/sewakantor-be:latest'
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script_stop: false
+          script: |
+            killall -f "mainrun" || true
+            cd ~/sk-be
+            git pull
+            rm mainrun || true
+            go build -o mainrun app/main.go
+            ./mainrun &

@@ -18,5 +18,4 @@ WORKDIR /app
 STOPSIGNAL SIGINT
 EXPOSE 8080
 COPY --from=builder /app/mainrun /app
-COPY --from=builder /app/.env /app
 CMD /app/mainrun
