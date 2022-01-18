@@ -62,10 +62,10 @@ jobs:
           port: 22
           script_stop: false
           script: |
-            killall "mainrun"
-            cd ~/sk-be
-            git pull
-            rm mainrun || true
-            go build -o mainrun app/main.go
-            nohup ./mainrun & disown
-            exit
+            - killall "mainrun"
+            - cd ~/sk-be
+            - git pull
+            - rm mainrun || true
+            - go build -o mainrun app/main.go
+            - nohup ./mainrun & disown
+            - exit
