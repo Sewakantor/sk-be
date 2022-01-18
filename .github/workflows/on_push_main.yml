@@ -55,14 +55,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build Docker Image
-        run: docker build -t avtara/sewakantor-be:latest .
+        run: docker build -t avtara/sewakantorbackend:latest .
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push image to Docker Hub
-        run: docker push avtara/sewakantor-be:latest
+        run: docker push avtara/sewakantorbackend:latest
 
   deployment-ec2-aws:
     name: Deploy to AWS EC2
@@ -118,8 +118,8 @@ jobs:
           export CONFIG_SMTP_PORT='"'$CONFIG_SMTP_PORT'"' && \
           export CONFIG_SMTP_HOST='"'$CONFIG_SMTP_HOST'"' && \
           docker rm -vf $(docker ps -a -q) || true && \
-          docker pull avtara/sewakantor-be:latest && \
-          docker run -d -p 8080:8080 --name sewakantor-be \
+          docker pull avtara/sewakantorbackend:latest && \
+          docker run -d -p 8080:8080 --name sewakantorbackend \
           -e PORT=$PORT \
           -e BASE_URL_TARGET=$BASE_URL_TARGET \
           -e DB_NAME=$DB_NAME \
@@ -134,4 +134,4 @@ jobs:
           -e CONFIG_SENDER_NAME=$CONFIG_SENDER_NAME \
           -e CONFIG_SMTP_PORT=$CONFIG_SMTP_PORT \
           -e CONFIG_SMTP_HOST=$CONFIG_SMTP_HOST \
-          avtara/sewakantor-be:latest'
+          avtara/sewakantorbackend:latest'
