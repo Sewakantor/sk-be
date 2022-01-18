@@ -49,7 +49,8 @@ jobs:
           go test ./... -cover -failfast
 
   build:
-    name: Build
+    name: Build and Run on EC2
+    needs: Unit-Test
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using password
@@ -59,4 +60,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: 22
-          script: whoami
+          script: |
+            pkill -f "mainrun" || true
+            cd ~/sk-be
+            git pull
+            rm mainrun || true
+            build -o mainrun app/main.go
+            ./mainrun &
