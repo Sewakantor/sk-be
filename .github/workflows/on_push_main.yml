@@ -53,7 +53,7 @@ jobs:
     needs: Unit-Test
     runs-on: ubuntu-latest
     steps:
-      - name: executing remote ssh commands using password
+      - name: git pull and run it
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -68,4 +68,4 @@ jobs:
             rm mainrun || true
             go build -o mainrun app/main.go
             nohup ./mainrun & disown
-            exit 0
+            exit
