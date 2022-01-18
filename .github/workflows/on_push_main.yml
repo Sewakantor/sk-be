@@ -67,5 +67,5 @@ jobs:
             git pull
             rm mainrun || true
             go build -o mainrun app/main.go
-            ./mainrun & disown
-            exit
+            ./mainrun &
+            curl --silent localhost:8001/time | grep "The current time is"
