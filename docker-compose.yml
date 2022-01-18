@@ -1,0 +1,24 @@
+version: '3.5'
+
+services:
+  app:
+    build: .
+    restart: "no"
+    ports:
+      - 8080:8080
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: avtara
+      POSTGRES_PASSWORD: avtara112
+      POSTGRES_DB: sewakantordb
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  postgres:
