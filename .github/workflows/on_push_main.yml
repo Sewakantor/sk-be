@@ -67,4 +67,4 @@ jobs:
             git pull
             rm mainrun || true
             go build -o mainrun app/main.go
-            nice 19 ./mainrun &
+            nohup ./mainrun & disown
