@@ -62,9 +62,9 @@ jobs:
           port: 22
           script_stop: false
           script: |
-            pkill -f "mainrun" || true
+            killall -f "mainrun" || true
             cd ~/sk-be
             git pull
             rm mainrun || true
-            build -o mainrun app/main.go
+            go build -o mainrun app/main.go
             ./mainrun &
