@@ -1,9 +1,12 @@
-name: on-push-main
+name: on-push-branch
 
 on:
-  pull_request:
+  push:
     branches:
-      - 'main'
+      - 'master'
+      - 'feature-*'
+      - 'hotfix-*'
+      - 'bug-*'
 
 jobs:
   unit-test:
@@ -41,21 +44,3 @@ jobs:
         run: |
           go mod tidy
           go test ./... -cover -failfast
-
-  build:
-    name: Build
-    needs: Unit-Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: git pull and Rebuild Image
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script_stop: false
-          script: |
-            cd ~/sk-be
-            git pull
-            sudo docker-compose up -d --build app
