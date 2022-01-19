@@ -12,7 +12,7 @@ services:
     environment:
       POSTGRES_USER: avtara
       POSTGRES_PASSWORD: avtara112
-      POSTGRES_DB: sewakantordb
+      POSTGRES_DB: travairdb
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
