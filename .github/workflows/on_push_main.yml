@@ -55,6 +55,15 @@ jobs:
     steps:
       - name: git pull and run it
         uses: appleboy/ssh-action@master
+        env:
+          PORT: ${{ secrets.PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRE: ${{ secrets.JWT_EXPIRE }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -62,7 +71,27 @@ jobs:
           port: 22
           script_stop: false
           script: |
-            cd ~/sk-be
-            git pull
-            rm mainrun || true
-            go build -o mainrun app/main.go
+            ssh development 'export PORT='"'$PORT'"' && \
+            export DB_USER='"'$DB_USER'"' && \
+            export DB_PASSWORD='"'$DB_PASSWORD'"' && \
+            export DB_HOST='"'$DB_HOST'"' && \
+            export DB_PORT='"'$DB_PORT'"' && \
+            export DB_NAME='"'$DB_NAME'"' && \
+            export JWT_SECRET='"'$JWT_SECRET'"' && \
+            export JWT_EXPIRE='"'$JWT_EXPIRE'"' && \
+            docker rm -vf $(docker ps -a -q) || true && \
+            docker pull avtara/sewakantorbackend:1.0.0 && \
+            docker run -d -p 8080:8080 --name sewakantorbackend \
+            -e PORT=$PORT \
+            -e DB_HOST=$DB_HOST \
+            -e DB_PORT=$DB_PORT \
+            -e DB_USER=$DB_USER \
+            -e DB_PASSWORD=$DB_PASSWORD \
+            -e DB_NAME=$DB_NAME \
+            -e JWT_SECRET=$JWT_SECRET \
+            -e JWT_EXPIRE=$JWT_EXPIRE \
+            avtara/sewakantorbackend:1.0.0'
+#            cd ~/sk-be
+#            git pull
+#            rm mainrun || true
+#            go build -o mainrun app/main.go
