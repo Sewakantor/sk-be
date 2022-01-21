@@ -3,10 +3,12 @@ name: on-push-branch
 on:
   push:
     branches:
-      - 'master'
       - 'feature-*'
       - 'hotfix-*'
       - 'bug-*'
+  pull_request:
+    branches:
+      - 'main'
 
 jobs:
   unit-test:
