@@ -77,7 +77,7 @@ func (ctrl *UserController) Login(c echo.Context) error {
 	req := new(request.Login)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusNotFound,
-			helpers.BuildErrorResponse("Account Not Found",
+			helpers.BuildErrorResponse("Not Found",
 				err, helpers.EmptyObj{}))
 	}
 	if err := c.Validate(req); err != nil {
@@ -94,11 +94,11 @@ func (ctrl *UserController) Login(c echo.Context) error {
 					err, helpers.EmptyObj{}))
 		} else if strings.Contains(err.Error(), "not been activated") {
 			return c.JSON(http.StatusForbidden,
-				helpers.BuildErrorResponse("Account Unactivated!",
+				helpers.BuildErrorResponse("Forbidden",
 					err, helpers.EmptyObj{}))
 		} else if strings.Contains(err.Error(), "not found") {
 			return c.JSON(http.StatusNotFound,
-				helpers.BuildErrorResponse("Account Not Found",
+				helpers.BuildErrorResponse("Not Found",
 					err, helpers.EmptyObj{}))
 		}
 		return c.JSON(http.StatusInternalServerError,

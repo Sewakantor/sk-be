@@ -7,12 +7,12 @@ import (
 	"github.com/sewakantor/sw-be/app/config"
 	_middleware "github.com/sewakantor/sw-be/app/middleware"
 	"github.com/sewakantor/sw-be/app/routes"
-	_complexService "github.com/sewakantor/sw-be/businesses/complex"
+	_propertyService "github.com/sewakantor/sw-be/businesses/property"
 	_usersService "github.com/sewakantor/sw-be/businesses/users"
-	_complexController "github.com/sewakantor/sw-be/controllers/complex"
+	_propertyController "github.com/sewakantor/sw-be/controllers/property"
 	_usersController "github.com/sewakantor/sw-be/controllers/users"
 	"github.com/sewakantor/sw-be/helpers"
-	_complexRepo "github.com/sewakantor/sw-be/repository/databases/complex"
+	_propertyRepo "github.com/sewakantor/sw-be/repository/databases/property"
 	_usersRepo "github.com/sewakantor/sw-be/repository/databases/users"
 	"log"
 	"os"
@@ -41,14 +41,14 @@ func main() {
 	userService := _usersService.NewUserService(userRepo, &configJWT)
 	userCtrl := _usersController.NewUserController(userService)
 
-	complexRepo := _complexRepo.NewRepoPostgres(db)
-	complexService := _complexService.NewComplexService(complexRepo)
-	complexCtrl := _complexController.NewComplexController(complexService)
+	propertyRepo := _propertyRepo.NewRepoPostgres(db)
+	propertyService := _propertyService.NewPropertyService(propertyRepo)
+	propertyCtrl := _propertyController.NewPropertyController(propertyService)
 
 	routesInit := routes.ControllerList{
 		JWTMiddleware:  configJWT.Init(),
 		UserController: *userCtrl,
-		ComplexController: *complexCtrl,
+		PropertyController: *propertyCtrl,
 	}
 	routesInit.RouteRegister(e)
 

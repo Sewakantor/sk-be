@@ -10,4 +10,6 @@ var (
 	ErrAccountUnactivated = errors.New("account has not been activated")
 	ErrInvalidCredential = errors.New("email or password does not match")
 	ErrComplexNotFound = errors.New("complex not found")
+	ErrComplexDuplicate = errors.New("complex data already exists")
+	ErrBuildingNotFound = errors.New("building not found")
 )
