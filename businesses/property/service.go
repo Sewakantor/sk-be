@@ -145,10 +145,11 @@ func (us *propertyService) GetSingleBuilding(ID string) (*Building, error) {
 	buildingID, err := strconv.ParseUint(ID, 10, 64)
 	res, err := us.propertyRepository.GetSingleBuilding(uint(buildingID))
 	if err != nil {
-		if strings.Contains(err.Error(), "not found") {
-			return nil, businesses.ErrBuildingNotFound
-		}
 		return nil, businesses.ErrInternalServer
+	}
+
+	if res.ID == 0 {
+		return nil, businesses.ErrBuildingNotFound
 	}
 
 	return res, nil
@@ -164,6 +165,26 @@ func (us *propertyService) UpdateBuilding(data *Building, ID string) (*Building,
 	res, err = us.propertyRepository.UpdateBuilding(data, uint(buildingID))
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
+			return nil, businesses.ErrBuildingNotFound
+		}
+		return nil, businesses.ErrInternalServer
+	}
+
+	return res, nil
+}
+
+func (us *propertyService) AddReview(data *Review, buildingID string, usersID uint) (*Review, error) {
+	buildID, err := strconv.ParseUint(buildingID, 10, 64)
+	if err != nil {
+		return nil, businesses.ErrInternalServer
+	}
+
+	data.Status = 0
+	data.UserID = usersID
+	data.BuildingID = uint(buildID)
+	res, err := us.propertyRepository.StoreReview(data)
+	if err != nil {
+		if strings.Contains(err.Error(), "violates foreign") {
 			return nil, businesses.ErrBuildingNotFound
 		}
 		return nil, businesses.ErrInternalServer

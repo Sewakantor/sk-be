@@ -2,6 +2,7 @@ package property
 
 import (
 	"github.com/sewakantor/sw-be/businesses/property"
+	users2 "github.com/sewakantor/sw-be/repository/databases/users"
 	"gorm.io/gorm"
 	"time"
 )
@@ -31,6 +32,17 @@ type Building struct {
 	Price        int
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
+}
+
+type Review struct {
+	gorm.Model
+	BuildingID uint
+	Buildings  Building `gorm:"foreignKey:BuildingID"`
+	UserID     uint
+	Users      users2.Users `gorm:"foreignKey:UserID"`
+	Commend    string
+	Star       int
+	Status     int
 }
 
 func fromDomainComplex(data *property.Complex) *Complex {
@@ -108,4 +120,29 @@ func ToBuildingsDomain(data []Building) []property.Building {
 		}
 	}
 	return res
+}
+
+func fromDomainReview(data *property.Review) *Review {
+	return &Review{
+		UserID:     data.UserID,
+		BuildingID: data.BuildingID,
+		Status:     0,
+		Commend:    data.Commend,
+		Star:       data.Star,
+	}
+}
+
+func toDomainReview(data *Review) *property.Review {
+	return &property.Review{
+		ID:         data.ID,
+		UserID:     data.UserID,
+		BuildingID: data.BuildingID,
+		Status:     data.Status,
+		Commend:    data.Commend,
+		Star:       data.Star,
+		Buildings:  *toDomainBuilding(&data.Buildings),
+		CreatedAt:  data.CreatedAt,
+		UpdatedAt:  data.UpdatedAt,
+		Users:      *users2.ToDomain(&data.Users),
+	}
 }

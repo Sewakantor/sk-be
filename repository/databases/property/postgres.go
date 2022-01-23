@@ -156,3 +156,12 @@ func (repo *propertyRepository) UpdateBuilding(data *property.Building, ID uint)
 	result := toDomainBuilding(&building)
 	return result, nil
 }
+
+func (repo *propertyRepository) StoreReview(data *property.Review) (*property.Review, error) {
+	review := fromDomainReview(data)
+	if err := repo.DB.Create(&review).Error; err != nil {
+		return nil, err
+	}
+
+	return toDomainReview(review), nil
+}
