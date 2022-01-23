@@ -16,7 +16,7 @@ type Users struct {
 	Status   int       `gorm:"default:0;size:10"`
 }
 
-func toDomain(rec *Users) *users.Domain {
+func ToDomain(rec *Users) *users.Domain {
 	return &users.Domain{
 		ID: 	   rec.ID,
 		Name:      rec.Name,

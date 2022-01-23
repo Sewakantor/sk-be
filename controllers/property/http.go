@@ -2,6 +2,7 @@ package property
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/sewakantor/sw-be/app/middleware"
 	"github.com/sewakantor/sw-be/businesses/property"
 	"github.com/sewakantor/sw-be/controllers/property/request"
 	"github.com/sewakantor/sw-be/controllers/property/response"
@@ -230,4 +231,30 @@ func (ctrl *PropertyControllers) UpdateBuilding(c echo.Context) error {
 	return c.JSON(http.StatusOK,
 		helpers.BuildResponse("Successfully updated a building!",
 			response.FromDomainBuilding(res)))
+}
+
+func (ctrl *PropertyControllers) AddReview(c echo.Context) error {
+	req := new(request.AddReview)
+	claim := middleware.GetUser(c)
+	buildingID := c.Param("buildingID")
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+
+	if err := c.Validate(req); err != nil {
+		return c.JSON(http.StatusBadRequest,
+			helpers.BuildErrorResponse("An error occurred while validating the request data",
+				err, helpers.EmptyObj{}))
+	}
+	res, err := ctrl.complexService.AddReview(req.AddReviewToDomain(), buildingID, claim.UserID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+	return c.JSON(http.StatusCreated,
+		helpers.BuildResponse("Successfully created a review!",
+			response.FromDomainReview(res)))
 }

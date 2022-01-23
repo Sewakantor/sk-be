@@ -1,6 +1,7 @@
 package property
 
 import (
+	"github.com/sewakantor/sw-be/businesses/users"
 	"time"
 )
 
@@ -33,6 +34,19 @@ type Building struct {
 	UpdatedAt    time.Time
 }
 
+type Review struct {
+	ID         uint
+	BuildingID uint
+	Buildings  Building
+	UserID     uint
+	Users      users.Domain
+	Commend    string
+	Star       int
+	Status     int
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+}
+
 type Service interface {
 	AddComplex(data *Complex) (*Complex, error)
 	DeleteComplex(ID string) error
@@ -44,6 +58,7 @@ type Service interface {
 	DeleteBuilding(ID string) error
 	GetSingleBuilding(ID string) (*Building, error)
 	UpdateBuilding(data *Building, ID string) (*Building, error)
+	AddReview(data *Review, buildingID string, usersID uint) (*Review, error)
 }
 
 type Repository interface {
@@ -60,4 +75,5 @@ type Repository interface {
 	GetBuildingByID(ID uint) (*Building, error)
 	GetSingleBuilding(ID uint) (*Building, error)
 	UpdateBuilding(data *Building, ID uint) (*Building, error)
+	StoreReview(data *Review) (*Review, error)
 }

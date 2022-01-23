@@ -25,6 +25,11 @@ type AddBuilding struct {
 	Price        int    `json:"price" validate:"required"`
 }
 
+type AddReview struct {
+	Commend string `json:"comment" validate:"required"`
+	Star    int    `json:"star" validate:"required"`
+}
+
 func (rec *AddComplex) AddComplexToDomain() *property.Complex {
 	return &property.Complex{
 		Name:       rec.Name,
@@ -47,5 +52,12 @@ func (rec *AddBuilding) AddBuildingToDomain() *property.Building {
 		FloorSurface: rec.FloorSurface,
 		TotalSurface: rec.TotalSurface,
 		Price:        rec.Price,
+	}
+}
+
+func (rec *AddReview) AddReviewToDomain() *property.Review {
+	return &property.Review{
+		Commend: rec.Commend,
+		Star: rec.Star,
 	}
 }

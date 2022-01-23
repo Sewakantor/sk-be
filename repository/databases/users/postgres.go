@@ -20,7 +20,7 @@ func (ru *repoUsers) StoreNewUsers (data *users.Domain) (*users.Domain, error) {
 	if err := ru.DB.Create(&user); err.Error != nil {
 		return nil, err.Error
 	}
-	result := toDomain(user)
+	result := ToDomain(user)
 	return result, nil
 }
 
@@ -29,7 +29,7 @@ func (ru *repoUsers) GetByEmail (email string) (*users.Domain, error) {
 	if err := ru.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil, err
 	}
-	result := toDomain(&user)
+	result := ToDomain(&user)
 	return result, nil
 }
 
@@ -47,7 +47,7 @@ func (ru *repoUsers) GetByUserID(userID uint64) (*users.Domain, error) {
 	if err := ru.DB.Where("id = ?", userID).First(&user).Error; err != nil {
 		return nil, err
 	}
-	result := toDomain(&user)
+	result := ToDomain(&user)
 	return result, nil
 }
 
@@ -56,6 +56,6 @@ func (ru *repoUsers) GetByEmailAndPassword(email string) (*users.Domain, error) 
 	if err := ru.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		return nil, err
 	}
-	result := toDomain(&user)
+	result := ToDomain(&user)
 	return result, nil
 }

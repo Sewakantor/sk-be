@@ -30,6 +30,13 @@ type Building struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 
+type Review struct {
+	ID        uint      `json:"id"`
+	Commend   string    `json:"comment"`
+	Star      int       `json:"star"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 func FromDomainComplex(domain *property.Complex) *Complex {
 	return &Complex{
 		ID:         domain.ID,
@@ -56,5 +63,14 @@ func FromDomainBuilding(domain *property.Building) *Building {
 		TotalSurface: domain.TotalSurface,
 		Price:        domain.Price,
 		CreatedAt:    domain.CreatedAt,
+	}
+}
+
+func FromDomainReview(domain *property.Review) *Review {
+	return &Review{
+		ID:        domain.ID,
+		Star:      domain.Star,
+		Commend:   domain.Commend,
+		CreatedAt: domain.CreatedAt,
 	}
 }
