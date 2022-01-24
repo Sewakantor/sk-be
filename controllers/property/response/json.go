@@ -38,6 +38,19 @@ type Review struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type ReviewSpecific struct {
+	ID        uint      `json:"id"`
+	Commend   string    `json:"comment"`
+	Star      int       `json:"star"`
+	User      Users     `json:"user"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type Users struct {
+	Name    string
+	Company string
+}
+
 func FromDomainComplex(domain *property.Complex) *Complex {
 	return &Complex{
 		ID:         domain.ID,
@@ -76,3 +89,22 @@ func FromDomainReview(domain *property.Review) *Review {
 		CreatedAt: domain.CreatedAt,
 	}
 }
+
+func FromDomainReviewSpecific(domain *property.Review) *ReviewSpecific {
+	return &ReviewSpecific{
+		ID:        domain.ID,
+		Star:      domain.Star,
+		Commend:   domain.Commend,
+		CreatedAt: domain.CreatedAt,
+		User:      Users{Name: domain.Users.Name, Company: domain.Users.Company},
+	}
+}
+
+func FromDomainReviewsSpecific(data []property.Review) []ReviewSpecific {
+	var res []ReviewSpecific
+	for _, s := range data {
+		res = append(res, *FromDomainReviewSpecific(&s))
+	}
+	return res
+}
+

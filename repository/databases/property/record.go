@@ -146,6 +146,16 @@ func toDomainReview(data *Review) *property.Review {
 		Buildings:  *toDomainBuilding(&data.Buildings),
 		CreatedAt:  data.CreatedAt,
 		UpdatedAt:  data.UpdatedAt,
-		Users:      *users2.ToDomain(&data.Users),
+		Users:      *users2.ToDomainUser(&data.Users),
 	}
 }
+
+func ToReviewsDomain(data []Review) []property.Review {
+	var res []property.Review
+	for _, s := range data {
+			res = append(res, *toDomainReview(&s))
+	}
+	return res
+}
+
+

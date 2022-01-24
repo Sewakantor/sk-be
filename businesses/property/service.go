@@ -1,6 +1,7 @@
 package property
 
 import (
+	"fmt"
 	"github.com/sewakantor/sw-be/businesses"
 	"strconv"
 	"strings"
@@ -192,3 +193,62 @@ func (us *propertyService) AddReview(data *Review, buildingID string, usersID ui
 
 	return res, nil
 }
+
+func (us *propertyService) ApproveReview(ID string) (*Review, error) {
+	complexID, err := strconv.ParseUint(ID, 10, 64)
+	if err != nil {
+		fmt.Println(err)
+		return nil, businesses.ErrInternalServer
+	}
+	res, err := us.propertyRepository.ApproveReview(uint(complexID))
+
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			return nil, businesses.ErrReviewNotFound
+		}
+		fmt.Println(err)
+		return nil, businesses.ErrInternalServer
+	}
+	return res, nil
+}
+
+func (us *propertyService) GetAllReview(buildingID, limit, isApprove string) ([]Review, error) {
+	buildID, err := strconv.ParseUint(buildingID, 10, 64)
+	if err != nil {
+		return nil, businesses.ErrInternalServer
+	}
+	fmt.Println(isApprove)
+	fmt.Println(limit)
+	var lmt uint64
+	var isApproved bool
+	if limit != "" && isApprove != "" {
+		lmt, err = strconv.ParseUint(limit, 10, 64)
+		if err != nil {
+			return nil, businesses.ErrInternalServer
+		}
+		isApproved, err = strconv.ParseBool(isApprove)
+		fmt.Println(isApproved)
+		if err != nil {
+			return nil, businesses.ErrInternalServer
+		}
+	} else if isApprove != ""{
+		isApproved, err = strconv.ParseBool(isApprove)
+		if err != nil {
+			return nil, businesses.ErrInternalServer
+		}
+	} else if limit != "" {
+		lmt, err = strconv.ParseUint(limit, 10, 64)
+		if err != nil {
+			return nil, businesses.ErrInternalServer
+		}
+	}
+	res, err := us.propertyRepository.GetAllReview(uint(buildID), uint(lmt) ,isApproved)
+
+	if err != nil {
+		return nil, businesses.ErrInternalServer
+	}
+
+	return res, nil
+}
+
+

@@ -164,3 +164,43 @@ func (repo *propertyRepository) StoreReview(data *property.Review) (*property.Re
 
 	return toDomainReview(review), nil
 }
+
+func (repo *propertyRepository) ApproveReview(ID uint) (*property.Review, error) {
+	var review Review
+	if err := repo.DB.Where("id = ?", ID).First(&review).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	review.Status = 1
+
+	if err := repo.DB.Save(&review).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	result := toDomainReview(&review)
+	return result, nil
+}
+
+func (repo *propertyRepository) GetAllReview(buildingID uint, limit uint, isApprove bool) ([]property.Review, error) {
+	var review []Review
+	var err error
+	if isApprove {
+		if limit == 0 {
+			err = repo.DB.Joins("Users").Where("building_id = ? AND reviews.status = 1", buildingID).Find(&review).Error
+		} else {
+			err = repo.DB.Joins("Users").Limit(int(limit)).Where("building_id = ? AND reviews.status = 1", buildingID).Find(&review).Error
+		}
+	}else {
+		if limit == 0 {
+			err = repo.DB.Joins("Users").Where("building_id = ?", buildingID).Find(&review).Error
+		} else {
+			err = repo.DB.Joins("Users").Limit(int(limit)).Where("building_id = ?", buildingID).Find(&review).Error
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	return ToReviewsDomain(review), nil
+}

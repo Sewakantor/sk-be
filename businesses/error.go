@@ -12,4 +12,5 @@ var (
 	ErrComplexNotFound = errors.New("complex not found")
 	ErrComplexDuplicate = errors.New("complex data already exists")
 	ErrBuildingNotFound = errors.New("building not found")
+	ErrReviewNotFound = errors.New("review not found")
 )
