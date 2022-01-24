@@ -36,4 +36,6 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	property.PUT("/building/:id", cl.PropertyController.UpdateBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
 
 	property.POST("/building/:buildingID/review", cl.PropertyController.AddReview, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer", "supervisor", "superadmin"}))
+	property.PATCH("/building/review/:id", cl.PropertyController.ApproveReview, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer", "supervisor", "superadmin"}))
+	property.GET("/building/review/:id", cl.PropertyController.GetAllReview)
 }

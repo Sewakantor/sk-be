@@ -30,6 +30,14 @@ func ToDomain(rec *Users) *users.Domain {
 	}
 }
 
+func ToDomainUser(rec *Users) *users.Domain {
+	return &users.Domain{
+		ID: 	   rec.ID,
+		Name:      rec.Name,
+		Company:   rec.Company,
+	}
+}
+
 func fromDomain(domain *users.Domain) *Users {
 	return &Users{
 		Name:     domain.Name,

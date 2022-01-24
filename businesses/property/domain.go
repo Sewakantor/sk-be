@@ -60,6 +60,8 @@ type Service interface {
 	GetSingleBuilding(ID string) (*Building, error)
 	UpdateBuilding(data *Building, ID string) (*Building, error)
 	AddReview(data *Review, buildingID string, usersID uint) (*Review, error)
+	ApproveReview(ID string) (*Review, error)
+	GetAllReview(buildingID, limit, isApprove string) ([]Review, error)
 }
 
 type Repository interface {
@@ -77,4 +79,6 @@ type Repository interface {
 	GetSingleBuilding(ID uint) (*Building, error)
 	UpdateBuilding(data *Building, ID uint) (*Building, error)
 	StoreReview(data *Review) (*Review, error)
+	ApproveReview(ID uint) (*Review, error)
+	GetAllReview(buildingID uint, limit uint, isApprove bool) ([]Review, error)
 }
