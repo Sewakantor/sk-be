@@ -9,11 +9,14 @@ import (
 	"github.com/sewakantor/sw-be/app/routes"
 	_propertyService "github.com/sewakantor/sw-be/businesses/property"
 	_usersService "github.com/sewakantor/sw-be/businesses/users"
+	_facilityService "github.com/sewakantor/sw-be/businesses/facility"
 	_propertyController "github.com/sewakantor/sw-be/controllers/property"
 	_usersController "github.com/sewakantor/sw-be/controllers/users"
+	_facilityController "github.com/sewakantor/sw-be/controllers/facility"
 	"github.com/sewakantor/sw-be/helpers"
 	_propertyRepo "github.com/sewakantor/sw-be/repository/databases/property"
 	_usersRepo "github.com/sewakantor/sw-be/repository/databases/users"
+	_facilityRepo "github.com/sewakantor/sw-be/repository/databases/facility"
 	"log"
 	"os"
 	"strconv"
@@ -45,10 +48,15 @@ func main() {
 	propertyService := _propertyService.NewPropertyService(propertyRepo)
 	propertyCtrl := _propertyController.NewPropertyController(propertyService)
 
+	facilityRepo := _facilityRepo.NewRepoPostgres(db)
+	facilityService := _facilityService.NewPropertyService(facilityRepo)
+	facilityCtrl := _facilityController.NewPropertyController(facilityService)
+
 	routesInit := routes.ControllerList{
 		JWTMiddleware:  configJWT.Init(),
 		UserController: *userCtrl,
 		PropertyController: *propertyCtrl,
+		FacilityController: *facilityCtrl,
 	}
 	routesInit.RouteRegister(e)
 
