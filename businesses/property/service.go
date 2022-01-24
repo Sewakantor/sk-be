@@ -53,8 +53,8 @@ func (us *propertyService) DeleteComplex(ID string) error {
 	return nil
 }
 
-func (us *propertyService) GetAllComplex() ([]Complex, error) {
-	res, err := us.propertyRepository.GetAllComplex()
+func (us *propertyService) GetAllComplex(name string) ([]Complex, error) {
+	res, err := us.propertyRepository.GetAllComplex(name)
 	if err != nil {
 		return nil, businesses.ErrInternalServer
 	}

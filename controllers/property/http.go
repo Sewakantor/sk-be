@@ -60,18 +60,19 @@ func (ctrl *PropertyControllers) DeleteComplex(c echo.Context) error {
 			helpers.BuildErrorResponse("Internal Server Error",
 				err, helpers.EmptyObj{}))
 	}
-	return c.JSON(http.StatusCreated,
+	return c.JSON(http.StatusOK,
 		helpers.BuildResponse("Successfully delete a complex!",  map[string]string{"id": id}))
 }
 
 func (ctrl *PropertyControllers) GetAllComplex(c echo.Context) error {
-	res, err := ctrl.complexService.GetAllComplex()
+	name := c.QueryParam("name")
+	res, err := ctrl.complexService.GetAllComplex(name)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError,
 			helpers.BuildErrorResponse("Internal Server Error",
 				err, helpers.EmptyObj{}))
 	}
-	return c.JSON(http.StatusCreated,
+	return c.JSON(http.StatusOK,
 		helpers.BuildResponse("Successfully get a complex!", res))
 }
 

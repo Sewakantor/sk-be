@@ -30,6 +30,7 @@ type Building struct {
 	FloorSurface int
 	TotalSurface int
 	Price        int
+	Desc         string
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
@@ -50,7 +51,7 @@ type Review struct {
 type Service interface {
 	AddComplex(data *Complex) (*Complex, error)
 	DeleteComplex(ID string) error
-	GetAllComplex() ([]Complex, error)
+	GetAllComplex(name string) ([]Complex, error)
 	UpdateComplex(data *Complex, ID string) (*Complex, error)
 	AddBuilding(data *Building, ID string) (*Building, error)
 	GetAllBuilding(complexName string) ([]Building, error)
@@ -65,7 +66,7 @@ type Repository interface {
 	StoreComplex(data *Complex) (*Complex, error)
 	DeleteComplex(ID uint64) error
 	GetComplexByID(ID uint64) (*Complex, error)
-	GetAllComplex() ([]Complex, error)
+	GetAllComplex(name string) ([]Complex, error)
 	GetComplexByName(name string) (*Complex, error)
 	UpdateComplex(data *Complex, ID uint64) (*Complex, error)
 	StoreBuilding(data *Building) (*Building, error)

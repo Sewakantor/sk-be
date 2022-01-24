@@ -42,9 +42,9 @@ func (repo *propertyRepository) GetComplexByID(ID uint64) (*property.Complex, er
 	return result, nil
 }
 
-func (repo *propertyRepository) GetAllComplex() ([]property.Complex, error) {
+func (repo *propertyRepository) GetAllComplex(name string) ([]property.Complex, error) {
 	var complex []Complex
-	if err := repo.DB.Find(&complex).Error; err != nil {
+	if err := repo.DB.Where("name LIKE ?", "%"+name+"%").Find(&complex).Error; err != nil {
 		return nil, err
 	}
 	fmt.Println(complex)
@@ -84,16 +84,15 @@ func (repo *propertyRepository) UpdateComplex(data *property.Complex, ID uint64)
 
 func (repo *propertyRepository) StoreBuilding(data *property.Building) (*property.Building, error) {
 	building := fromDomainBuilding(data)
-	if err := repo.DB.Create(&building).Error; err != nil {
+	if err := repo.DB.Debug().Create(&building).Error; err != nil {
 		return nil, err
 	}
-
 	return toDomainBuilding(building), nil
 }
 
 func (repo *propertyRepository) GetAllBuilding(complexName string) ([]property.Building, error) {
 	var building []Building
-	if err := repo.DB.Debug().Joins("Complexes", repo.DB.Where(&Complex{Name: complexName})).Find(&building).Error; err != nil {
+	if err := repo.DB.Joins("Complexes", repo.DB.Where(&Complex{Name: complexName})).Find(&building).Error; err != nil {
 		return nil, err
 	}
 	return ToBuildingsDomain(building), nil

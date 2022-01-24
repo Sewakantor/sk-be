@@ -30,6 +30,7 @@ type Building struct {
 	FloorSurface int
 	TotalSurface int
 	Price        int
+	Desc         string `gorm:"type:varchar(255)"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
@@ -92,6 +93,7 @@ func fromDomainBuilding(data *property.Building) *Building {
 		FloorSurface: data.FloorSurface,
 		TotalSurface: data.TotalSurface,
 		Price:        data.Price,
+		Desc:         data.Desc,
 	}
 }
 
@@ -108,6 +110,7 @@ func toDomainBuilding(data *Building) *property.Building {
 		Price:        data.Price,
 		CreatedAt:    data.CreatedAt,
 		Complexes:    *toDomainComplex(&data.Complexes),
+		Desc:         data.Desc,
 		UpdatedAt:    data.UpdatedAt,
 	}
 }

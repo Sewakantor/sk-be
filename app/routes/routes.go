@@ -25,7 +25,7 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	property := e.Group("property")
 	property.POST("/complex", cl.PropertyController.AddComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
 	property.DELETE("/complex/:id", cl.PropertyController.DeleteComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
-	property.GET("/complex", cl.PropertyController.GetAllComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
+	property.GET("/complex", cl.PropertyController.GetAllComplex)
 	property.PUT("/complex/:id", cl.PropertyController.UpdateComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
 
 	property.POST("/building/:id/complex", cl.PropertyController.AddBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
