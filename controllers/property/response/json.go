@@ -12,7 +12,7 @@ type Complex struct {
 	City       string    `json:"city"`
 	State      string    `json:"state"`
 	Country    string    `json:"country"`
-	PostalCode int       `json:"postal-code"`
+	PostalCode int       `json:"postal_code"`
 	Latitude   float64   `json:"latitude"`
 	Longitude  float64   `json:"longitude"`
 	CreatedAt  time.Time `json:"created_at"`
@@ -27,6 +27,7 @@ type Building struct {
 	FloorSurface int       `json:"floor_surface"`
 	TotalSurface int       `json:"total_surface"`
 	Price        int       `json:"price"`
+	Desc         string    `json:"desc"`
 	CreatedAt    time.Time `json:"created_at"`
 }
 
@@ -62,6 +63,7 @@ func FromDomainBuilding(domain *property.Building) *Building {
 		FloorSurface: domain.FloorSurface,
 		TotalSurface: domain.TotalSurface,
 		Price:        domain.Price,
+		Desc:         domain.Desc,
 		CreatedAt:    domain.CreatedAt,
 	}
 }

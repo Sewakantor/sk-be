@@ -23,6 +23,7 @@ type AddBuilding struct {
 	FloorSurface int    `json:"floor_surface" validate:"required"`
 	TotalSurface int    `json:"total_surface" validate:"required"`
 	Price        int    `json:"price" validate:"required"`
+	Desc         string `json:"desc" validate:"required"`
 }
 
 type AddReview struct {
@@ -52,12 +53,13 @@ func (rec *AddBuilding) AddBuildingToDomain() *property.Building {
 		FloorSurface: rec.FloorSurface,
 		TotalSurface: rec.TotalSurface,
 		Price:        rec.Price,
+		Desc:         rec.Desc,
 	}
 }
 
 func (rec *AddReview) AddReviewToDomain() *property.Review {
 	return &property.Review{
 		Commend: rec.Commend,
-		Star: rec.Star,
+		Star:    rec.Star,
 	}
 }
