@@ -323,3 +323,32 @@ func (ctrl *PropertyControllers) AddUnit(c echo.Context) error {
 		helpers.BuildResponse("Successfully created a unit!",
 			response.FromDomainUnit(res)))
 }
+
+func (ctrl *PropertyControllers) DeleteUnit(c echo.Context) error {
+	id := c.Param("id")
+
+	err := ctrl.complexService.DeleteUnit(id)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			return c.JSON(http.StatusNotFound,
+				helpers.BuildErrorResponse("Not Found",
+					err, helpers.EmptyObj{}))
+		}
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+	return c.JSON(http.StatusOK,
+		helpers.BuildResponse("Successfully delete a unit!", map[string]string{"id": id}))
+}
+
+func (ctrl *PropertyControllers) GetAllUnit(c echo.Context) error {
+	res, err := ctrl.complexService.GetAllUnit()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+	return c.JSON(http.StatusOK,
+		helpers.BuildResponse("Successfully get a complex!", response.FromDomainUnitsSpecific(res)))
+}

@@ -74,6 +74,9 @@ type Service interface {
 	ApproveReview(ID string) (*Review, error)
 	GetAllReview(buildingID, limit, isApprove string) ([]Review, error)
 	AddUnit(data *Unit, buildingID string) (*Unit, error)
+	DeleteUnit(ID string) error
+	GetAllUnit() ([]Unit, error)
+
 }
 
 type Repository interface {
@@ -94,4 +97,7 @@ type Repository interface {
 	ApproveReview(ID uint) (*Review, error)
 	GetAllReview(buildingID uint, limit uint, isApprove bool) ([]Review, error)
 	StoreUnit(data *Unit) (*Unit, error)
+	DeleteUnit(ID uint) error
+	GetUnitByID(ID uint) (*Unit, error)
+	GetAllUnit() ([]Unit, error)
 }

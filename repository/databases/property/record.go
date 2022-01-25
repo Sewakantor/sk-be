@@ -189,3 +189,11 @@ func toDomainUnit(data *Unit) *property.Unit {
 		UpdatedAt:  data.UpdatedAt,
 	}
 }
+
+func ToUnitsDomain(data []Unit) []property.Unit {
+	var res []property.Unit
+	for _, s := range data {
+		res = append(res, *toDomainUnit(&s))
+	}
+	return res
+}

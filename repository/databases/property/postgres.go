@@ -211,3 +211,28 @@ func (repo *propertyRepository) StoreUnit(data *property.Unit) (*property.Unit, 
 	}
 	return toDomainUnit(unit), nil
 }
+
+func (repo *propertyRepository) DeleteUnit(ID uint) error {
+	var unit Unit
+	if err := repo.DB.Debug().Where("id = ?", ID).Delete(&unit).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *propertyRepository) GetUnitByID(ID uint) (*property.Unit, error) {
+	var unit Unit
+	if err := repo.DB.Where("id = ?", ID).First(&unit).Error; err != nil {
+		return nil, err
+	}
+	result := toDomainUnit(&unit)
+	return result, nil
+}
+
+func (repo *propertyRepository) GetAllUnit() ([]property.Unit, error) {
+	var unit []Unit
+	if err := repo.DB.Joins("Buildings").Find(&unit).Error; err != nil {
+		return nil, err
+	}
+	return ToUnitsDomain(unit), nil
+}

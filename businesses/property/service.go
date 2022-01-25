@@ -266,3 +266,33 @@ func (us *propertyService) AddUnit(data *Unit, buildingID string) (*Unit, error)
 	}
 	return res, nil
 }
+
+func (us *propertyService) DeleteUnit(ID string) error {
+	buildID, err := strconv.ParseUint(ID, 10, 64)
+	if err != nil {
+		return businesses.ErrInternalServer
+	}
+
+	_, err = us.propertyRepository.GetUnitByID(uint(buildID))
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			return businesses.ErrBuildingNotFound
+		}
+	}
+
+	err = us.propertyRepository.DeleteUnit(uint(buildID))
+	if err != nil {
+		return businesses.ErrInternalServer
+	}
+
+	return nil
+}
+
+func (us *propertyService) GetAllUnit() ([]Unit, error) {
+	res, err := us.propertyRepository.GetAllUnit()
+	if err != nil {
+		return nil, businesses.ErrInternalServer
+	}
+
+	return res, nil
+}
