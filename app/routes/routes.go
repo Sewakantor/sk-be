@@ -25,23 +25,23 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth.POST("", cl.UserController.Login)
 
 	property := e.Group("property")
-	property.POST("/complex", cl.PropertyController.AddComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
-	property.DELETE("/complex/:id", cl.PropertyController.DeleteComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
+	property.POST("/complex", cl.PropertyController.AddComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
+	property.DELETE("/complex/:id", cl.PropertyController.DeleteComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
 	property.GET("/complex", cl.PropertyController.GetAllComplex)
-	property.PUT("/complex/:id", cl.PropertyController.UpdateComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
+	property.PUT("/complex/:id", cl.PropertyController.UpdateComplex, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
 
-	property.POST("/building/:id/complex", cl.PropertyController.AddBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
+	property.POST("/building/:id/complex", cl.PropertyController.AddBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
 	property.GET("/building", cl.PropertyController.GetAllBuilding)
 	property.GET("/building/recommend", cl.PropertyController.GetRecommendedBuilding)
-	property.DELETE("/building/:id", cl.PropertyController.DeleteBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
+	property.DELETE("/building/:id", cl.PropertyController.DeleteBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
 	property.GET("/building/:id", cl.PropertyController.GetSingleBuilding)
-	property.PUT("/building/:id", cl.PropertyController.UpdateBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"supervisor", "superadmin"}))
+	property.PUT("/building/:id", cl.PropertyController.UpdateBuilding, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
 
-	property.POST("/building/:buildingID/review", cl.PropertyController.AddReview, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer", "supervisor", "superadmin"}))
-	property.PATCH("/building/review/:id", cl.PropertyController.ApproveReview, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer", "supervisor", "superadmin"}))
+	property.POST("/building/:buildingID/review", cl.PropertyController.AddReview, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer", "admin"}))
+	property.PATCH("/building/review/:id", cl.PropertyController.ApproveReview, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer", "admin"}))
 	property.GET("/building/review/:id", cl.PropertyController.GetAllReview)
 
 	facility := e.Group("facility")
-	facility.POST("", cl.FacilityController.AddFacility, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer", "supervisor", "superadmin"}))
+	facility.POST("", cl.FacilityController.AddFacility, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
 	facility.GET("", cl.FacilityController.GetFacility)
 }
