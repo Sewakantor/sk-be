@@ -7,16 +7,19 @@ import (
 	"github.com/sewakantor/sw-be/app/config"
 	_middleware "github.com/sewakantor/sw-be/app/middleware"
 	"github.com/sewakantor/sw-be/app/routes"
-	_propertyService "github.com/sewakantor/sw-be/businesses/property"
-	_usersService "github.com/sewakantor/sw-be/businesses/users"
 	_facilityService "github.com/sewakantor/sw-be/businesses/facility"
-	_propertyController "github.com/sewakantor/sw-be/controllers/property"
-	_usersController "github.com/sewakantor/sw-be/controllers/users"
+	_propertyService "github.com/sewakantor/sw-be/businesses/property"
+	_resvService "github.com/sewakantor/sw-be/businesses/reservation"
+	_usersService "github.com/sewakantor/sw-be/businesses/users"
 	_facilityController "github.com/sewakantor/sw-be/controllers/facility"
+	_propertyController "github.com/sewakantor/sw-be/controllers/property"
+	_resvController "github.com/sewakantor/sw-be/controllers/reservation"
+	_usersController "github.com/sewakantor/sw-be/controllers/users"
 	"github.com/sewakantor/sw-be/helpers"
-	_propertyRepo "github.com/sewakantor/sw-be/repository/databases/property"
-	_usersRepo "github.com/sewakantor/sw-be/repository/databases/users"
 	_facilityRepo "github.com/sewakantor/sw-be/repository/databases/facility"
+	_propertyRepo "github.com/sewakantor/sw-be/repository/databases/property"
+	_resvRepo "github.com/sewakantor/sw-be/repository/databases/reservation"
+	_usersRepo "github.com/sewakantor/sw-be/repository/databases/users"
 	"log"
 	"os"
 	"strconv"
@@ -52,11 +55,16 @@ func main() {
 	facilityService := _facilityService.NewPropertyService(facilityRepo)
 	facilityCtrl := _facilityController.NewPropertyController(facilityService)
 
+	resvRepo := _resvRepo.NewRepoMySQL(db)
+	resvService := _resvService.NewReservationService(resvRepo, userService, propertyService)
+	resvCtrl := _resvController.NewReservationController(resvService)
+
 	routesInit := routes.ControllerList{
 		JWTMiddleware:  configJWT.Init(),
 		UserController: *userCtrl,
 		PropertyController: *propertyCtrl,
 		FacilityController: *facilityCtrl,
+		ReservationController: *resvCtrl,
 	}
 	routesInit.RouteRegister(e)
 

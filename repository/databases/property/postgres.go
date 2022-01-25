@@ -209,7 +209,7 @@ func (repo *propertyRepository) StoreUnit(data *property.Unit) (*property.Unit, 
 	if err := repo.DB.Create(&unit).Error; err != nil {
 		return nil, err
 	}
-	return toDomainUnit(unit), nil
+	return ToDomainUnit(unit), nil
 }
 
 func (repo *propertyRepository) DeleteUnit(ID uint) error {
@@ -225,7 +225,7 @@ func (repo *propertyRepository) GetUnitByID(ID uint) (*property.Unit, error) {
 	if err := repo.DB.Where("id = ?", ID).First(&unit).Error; err != nil {
 		return nil, err
 	}
-	result := toDomainUnit(&unit)
+	result := ToDomainUnit(&unit)
 	return result, nil
 }
 
