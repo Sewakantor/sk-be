@@ -46,7 +46,7 @@ func (cv *CustomValidator) Init() {
 	err = cv.Validator.RegisterValidation("role", func(fl validator.FieldLevel) bool {
 		role := fl.Field().String()
 
-		return role == "customer" || role == "superadmin" || role == "supervisor" || role == "consultant"
+		return role == "customer" || role == "admin"
 	})
 	if err != nil {
 		return
