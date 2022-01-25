@@ -31,6 +31,27 @@ type Building struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 
+type Unit struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Surface  int    `json:"surface"`
+	Capacity int    `json:"capacity"`
+}
+
+type UnitSpecific struct {
+	ID        uint      `json:"id"`
+	Name      string    `json:"name"`
+	Surface   int       `json:"surface"`
+	Capacity  int       `json:"capacity"`
+	Buildings Buildings `json:"building"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type Buildings struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
+}
+
 type Review struct {
 	ID        uint      `json:"id"`
 	Commend   string    `json:"comment"`
@@ -108,3 +129,30 @@ func FromDomainReviewsSpecific(data []property.Review) []ReviewSpecific {
 	return res
 }
 
+func FromDomainUnit(domain *property.Unit) *Unit {
+	return &Unit{
+		ID:       domain.ID,
+		Name:     domain.Name,
+		Capacity: domain.Capacity,
+		Surface:  domain.Surface,
+	}
+}
+
+func FromDomainUnitSpecific(domain *property.Unit) *UnitSpecific {
+	return &UnitSpecific{
+		ID:        domain.ID,
+		Name:      domain.Name,
+		Surface:   domain.Surface,
+		Capacity:  domain.Capacity,
+		Buildings: Buildings{Name: domain.Buildings.Name, ID: domain.Buildings.ID},
+		CreatedAt: domain.CreatedAt,
+	}
+}
+
+func FromDomainUnitsSpecific(data []property.Unit) []UnitSpecific {
+	var res []UnitSpecific
+	for _, s := range data {
+		res = append(res, *FromDomainUnitSpecific(&s))
+	}
+	return res
+}

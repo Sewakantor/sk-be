@@ -31,6 +31,12 @@ type AddReview struct {
 	Star    int    `json:"star" validate:"required"`
 }
 
+type AddUnit struct {
+	Name     string `json:"name" validate:"required"`
+	Surface  int    `json:"surface" validate:"required"`
+	Capacity int    `json:"capacity" validate:"required"`
+}
+
 func (rec *AddComplex) AddComplexToDomain() *property.Complex {
 	return &property.Complex{
 		Name:       rec.Name,
@@ -61,5 +67,13 @@ func (rec *AddReview) AddReviewToDomain() *property.Review {
 	return &property.Review{
 		Commend: rec.Commend,
 		Star:    rec.Star,
+	}
+}
+
+func (rec *AddUnit) AddUnitToDomain() *property.Unit {
+	return &property.Unit{
+		Name:     rec.Name,
+		Capacity: rec.Capacity,
+		Surface:  rec.Surface,
 	}
 }

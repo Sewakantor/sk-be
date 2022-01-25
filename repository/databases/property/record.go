@@ -35,6 +35,15 @@ type Building struct {
 	UpdatedAt    time.Time
 }
 
+type Unit struct {
+	gorm.Model
+	Name       string `gorm:"type:varchar(255)"`
+	BuildingID uint
+	Buildings  Building `gorm:"foreignKey:BuildingID"`
+	Surface    int
+	Capacity   int
+}
+
 type Review struct {
 	gorm.Model
 	BuildingID uint
@@ -153,9 +162,38 @@ func toDomainReview(data *Review) *property.Review {
 func ToReviewsDomain(data []Review) []property.Review {
 	var res []property.Review
 	for _, s := range data {
-			res = append(res, *toDomainReview(&s))
+		res = append(res, *toDomainReview(&s))
 	}
 	return res
 }
 
+func fromDomainUnit(data *property.Unit) *Unit {
+	return &Unit{
+		Name:       data.Name,
+		Capacity:   data.Capacity,
+		Surface:    data.Surface,
+		BuildingID: data.BuildingID,
+	}
+}
 
+func toDomainUnit(data *Unit) *property.Unit {
+
+	return &property.Unit{
+		ID:         data.ID,
+		Name:       data.Name,
+		BuildingID: data.BuildingID,
+		Surface:    data.Surface,
+		Capacity:   data.Capacity,
+		Buildings:  *toDomainBuilding(&data.Buildings),
+		CreatedAt:  data.CreatedAt,
+		UpdatedAt:  data.UpdatedAt,
+	}
+}
+
+func ToUnitsDomain(data []Unit) []property.Unit {
+	var res []property.Unit
+	for _, s := range data {
+		res = append(res, *toDomainUnit(&s))
+	}
+	return res
+}

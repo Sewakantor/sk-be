@@ -231,7 +231,7 @@ func (us *propertyService) GetAllReview(buildingID, limit, isApprove string) ([]
 		if err != nil {
 			return nil, businesses.ErrInternalServer
 		}
-	} else if isApprove != ""{
+	} else if isApprove != "" {
 		isApproved, err = strconv.ParseBool(isApprove)
 		if err != nil {
 			return nil, businesses.ErrInternalServer
@@ -242,7 +242,7 @@ func (us *propertyService) GetAllReview(buildingID, limit, isApprove string) ([]
 			return nil, businesses.ErrInternalServer
 		}
 	}
-	res, err := us.propertyRepository.GetAllReview(uint(buildID), uint(lmt) ,isApproved)
+	res, err := us.propertyRepository.GetAllReview(uint(buildID), uint(lmt), isApproved)
 
 	if err != nil {
 		return nil, businesses.ErrInternalServer
@@ -251,4 +251,48 @@ func (us *propertyService) GetAllReview(buildingID, limit, isApprove string) ([]
 	return res, nil
 }
 
+func (us *propertyService) AddUnit(data *Unit, buildingID string) (*Unit, error) {
+	buildID, err := strconv.ParseUint(buildingID, 10, 64)
+	if err != nil {
+		return nil, businesses.ErrInternalServer
+	}
+	data.BuildingID = uint(buildID)
+	res, err := us.propertyRepository.StoreUnit(data)
+	if err != nil {
+		if strings.Contains(err.Error(), "violates foreign") {
+			return nil, businesses.ErrBuildingNotFound
+		}
+		return nil, businesses.ErrInternalServer
+	}
+	return res, nil
+}
 
+func (us *propertyService) DeleteUnit(ID string) error {
+	buildID, err := strconv.ParseUint(ID, 10, 64)
+	if err != nil {
+		return businesses.ErrInternalServer
+	}
+
+	_, err = us.propertyRepository.GetUnitByID(uint(buildID))
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			return businesses.ErrBuildingNotFound
+		}
+	}
+
+	err = us.propertyRepository.DeleteUnit(uint(buildID))
+	if err != nil {
+		return businesses.ErrInternalServer
+	}
+
+	return nil
+}
+
+func (us *propertyService) GetAllUnit() ([]Unit, error) {
+	res, err := us.propertyRepository.GetAllUnit()
+	if err != nil {
+		return nil, businesses.ErrInternalServer
+	}
+
+	return res, nil
+}

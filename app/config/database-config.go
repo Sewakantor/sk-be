@@ -36,5 +36,5 @@ func SetupDatabaseConnection() *gorm.DB {
 }
 
 func dbMigrate(db *gorm.DB) {
-	db.AutoMigrate(&_usersRepo.Users{}, &_propertyRepo.Complex{}, &_propertyRepo.Building{}, &_propertyRepo.Review{}, &_facilityRepo.Facility{})
+	db.AutoMigrate(&_usersRepo.Users{}, &_propertyRepo.Complex{}, &_propertyRepo.Building{}, &_propertyRepo.Review{}, &_propertyRepo.Unit{}, &_facilityRepo.Facility{})
 }

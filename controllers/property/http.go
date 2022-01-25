@@ -62,7 +62,7 @@ func (ctrl *PropertyControllers) DeleteComplex(c echo.Context) error {
 				err, helpers.EmptyObj{}))
 	}
 	return c.JSON(http.StatusOK,
-		helpers.BuildResponse("Successfully delete a complex!",  map[string]string{"id": id}))
+		helpers.BuildResponse("Successfully delete a complex!", map[string]string{"id": id}))
 }
 
 func (ctrl *PropertyControllers) GetAllComplex(c echo.Context) error {
@@ -297,4 +297,58 @@ func (ctrl *PropertyControllers) GetAllReview(c echo.Context) error {
 	return c.JSON(http.StatusOK,
 		helpers.BuildResponse("Successfully approve a review!",
 			response.FromDomainReviewsSpecific(res)))
+}
+
+func (ctrl *PropertyControllers) AddUnit(c echo.Context) error {
+	req := new(request.AddUnit)
+	buildingID := c.Param("buildingID")
+	if err := c.Bind(req); err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+
+	if err := c.Validate(req); err != nil {
+		return c.JSON(http.StatusBadRequest,
+			helpers.BuildErrorResponse("An error occurred while validating the request data",
+				err, helpers.EmptyObj{}))
+	}
+	res, err := ctrl.complexService.AddUnit(req.AddUnitToDomain(), buildingID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+	return c.JSON(http.StatusCreated,
+		helpers.BuildResponse("Successfully created a unit!",
+			response.FromDomainUnit(res)))
+}
+
+func (ctrl *PropertyControllers) DeleteUnit(c echo.Context) error {
+	id := c.Param("id")
+
+	err := ctrl.complexService.DeleteUnit(id)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			return c.JSON(http.StatusNotFound,
+				helpers.BuildErrorResponse("Not Found",
+					err, helpers.EmptyObj{}))
+		}
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+	return c.JSON(http.StatusOK,
+		helpers.BuildResponse("Successfully delete a unit!", map[string]string{"id": id}))
+}
+
+func (ctrl *PropertyControllers) GetAllUnit(c echo.Context) error {
+	res, err := ctrl.complexService.GetAllUnit()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError,
+			helpers.BuildErrorResponse("Internal Server Error",
+				err, helpers.EmptyObj{}))
+	}
+	return c.JSON(http.StatusOK,
+		helpers.BuildResponse("Successfully get a complex!", response.FromDomainUnitsSpecific(res)))
 }
