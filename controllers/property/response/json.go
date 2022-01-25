@@ -31,6 +31,13 @@ type Building struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 
+type Unit struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Surface  int    `json:"surface"`
+	Capacity int    `json:"capacity"`
+}
+
 type Review struct {
 	ID        uint      `json:"id"`
 	Commend   string    `json:"comment"`
@@ -108,3 +115,11 @@ func FromDomainReviewsSpecific(data []property.Review) []ReviewSpecific {
 	return res
 }
 
+func FromDomainUnit(domain *property.Unit) *Unit {
+	return &Unit{
+		ID:      domain.ID,
+		Name: domain.Name,
+		Capacity: domain.Capacity,
+		Surface: domain.Surface,
+	}
+}

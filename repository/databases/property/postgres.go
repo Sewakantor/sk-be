@@ -192,7 +192,7 @@ func (repo *propertyRepository) GetAllReview(buildingID uint, limit uint, isAppr
 		} else {
 			err = repo.DB.Joins("Users").Limit(int(limit)).Where("building_id = ? AND reviews.status = 1", buildingID).Find(&review).Error
 		}
-	}else {
+	} else {
 		if limit == 0 {
 			err = repo.DB.Joins("Users").Where("building_id = ?", buildingID).Find(&review).Error
 		} else {
@@ -203,4 +203,11 @@ func (repo *propertyRepository) GetAllReview(buildingID uint, limit uint, isAppr
 		return nil, err
 	}
 	return ToReviewsDomain(review), nil
+}
+func (repo *propertyRepository) StoreUnit(data *property.Unit) (*property.Unit, error) {
+	unit := fromDomainUnit(data)
+	if err := repo.DB.Create(&unit).Error; err != nil {
+		return nil, err
+	}
+	return toDomainUnit(unit), nil
 }

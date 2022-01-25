@@ -35,6 +35,17 @@ type Building struct {
 	UpdatedAt    time.Time
 }
 
+type Unit struct {
+	ID         uint
+	Name       string
+	BuildingID uint
+	Buildings  Building
+	Surface    int
+	Capacity   int
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+}
+
 type Review struct {
 	ID         uint
 	BuildingID uint
@@ -62,6 +73,7 @@ type Service interface {
 	AddReview(data *Review, buildingID string, usersID uint) (*Review, error)
 	ApproveReview(ID string) (*Review, error)
 	GetAllReview(buildingID, limit, isApprove string) ([]Review, error)
+	AddUnit(data *Unit, buildingID string) (*Unit, error)
 }
 
 type Repository interface {
@@ -81,4 +93,5 @@ type Repository interface {
 	StoreReview(data *Review) (*Review, error)
 	ApproveReview(ID uint) (*Review, error)
 	GetAllReview(buildingID uint, limit uint, isApprove bool) ([]Review, error)
+	StoreUnit(data *Unit) (*Unit, error)
 }
