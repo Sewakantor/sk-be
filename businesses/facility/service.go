@@ -30,8 +30,8 @@ func (us *facilityService) UnitsByGeo(long, lat string) ([]Domain, error) {
 	var res []Domain
 	var err error
 	if long != "" && lat != "" {
-		longFloat, _ := strconv.ParseFloat(lat, 64)
-		latFloat, _ := strconv.ParseFloat(long, 64)
+		longFloat, _ := strconv.ParseFloat(long, 64)
+		latFloat, _ := strconv.ParseFloat(lat, 64)
 		res, err = us.facilityRepository.GetFacilityByGeo(latFloat, longFloat)
 		if err != nil {
 			return nil, businesses.ErrInternalServer
