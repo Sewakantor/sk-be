@@ -29,7 +29,7 @@ func (rs *reservationService) Reservation(data *Domain) (*Domain, error) {
 		return nil, businesses.ErrUnitReserved
 	}
 	res, err := rs.reservationRepository.Store(data)
-	if err == nil {
+	if err != nil {
 		return nil, businesses.ErrInternalServer
 	}
 
