@@ -176,7 +176,7 @@ func fromDomainUnit(data *property.Unit) *Unit {
 	}
 }
 
-func toDomainUnit(data *Unit) *property.Unit {
+func ToDomainUnit(data *Unit) *property.Unit {
 
 	return &property.Unit{
 		ID:         data.ID,
@@ -193,7 +193,7 @@ func toDomainUnit(data *Unit) *property.Unit {
 func ToUnitsDomain(data []Unit) []property.Unit {
 	var res []property.Unit
 	for _, s := range data {
-		res = append(res, *toDomainUnit(&s))
+		res = append(res, *ToDomainUnit(&s))
 	}
 	return res
 }

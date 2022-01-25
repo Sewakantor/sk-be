@@ -5,6 +5,7 @@ import (
 	"github.com/joho/godotenv"
 	_facilityRepo "github.com/sewakantor/sw-be/repository/databases/facility"
 	_propertyRepo "github.com/sewakantor/sw-be/repository/databases/property"
+	_resvRepo "github.com/sewakantor/sw-be/repository/databases/reservation"
 	_usersRepo "github.com/sewakantor/sw-be/repository/databases/users"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -36,5 +37,5 @@ func SetupDatabaseConnection() *gorm.DB {
 }
 
 func dbMigrate(db *gorm.DB) {
-	db.AutoMigrate(&_usersRepo.Users{}, &_propertyRepo.Complex{}, &_propertyRepo.Building{}, &_propertyRepo.Review{}, &_propertyRepo.Unit{}, &_facilityRepo.Facility{})
+	db.AutoMigrate(&_usersRepo.Users{}, &_propertyRepo.Complex{}, &_propertyRepo.Building{}, &_propertyRepo.Review{}, &_propertyRepo.Unit{}, &_facilityRepo.Facility{}, &_resvRepo.Reservation{})
 }

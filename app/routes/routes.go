@@ -6,6 +6,7 @@ import (
 	_middleware "github.com/sewakantor/sw-be/app/middleware"
 	"github.com/sewakantor/sw-be/controllers/facility"
 	"github.com/sewakantor/sw-be/controllers/property"
+	"github.com/sewakantor/sw-be/controllers/reservation"
 	"github.com/sewakantor/sw-be/controllers/users"
 )
 
@@ -14,6 +15,7 @@ type ControllerList struct {
 	JWTMiddleware     middleware.JWTConfig
 	PropertyController property.PropertyControllers
 	FacilityController facility.FacilityControllers
+	ReservationController reservation.ReservationController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -48,4 +50,8 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	facility := e.Group("facility")
 	facility.POST("", cl.FacilityController.AddFacility, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
 	facility.GET("", cl.FacilityController.GetFacility)
+
+	resv := e.Group("reservation")
+	resv.POST("/:id", cl.ReservationController.Reservation, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"admin"}))
+	resv.GET("/:id", cl.ReservationController.GetReservation, middleware.JWTWithConfig(cl.JWTMiddleware), _middleware.RoleValidation([]string{"customer","admin"}))
 }
